@@ -127,7 +127,6 @@
     <!-- Formulario para UniFi -->
     <form id="wifiForm" method="post" action="$AUTH_ACTION">
       <div class="label">Correo electrónico</div>
-
       <div class="input-group">
         <input type="email" id="email" name="username" required placeholder="tu@email.com">
         <div class="error" id="emailError">Debe ingresar un correo electrónico válido.</div>
@@ -145,6 +144,15 @@
       <button type="submit" id="connectBtn" disabled>Conectarse</button>
     </form>
 
+    <!-- Formulario invisible para enviar a Google Apps Script -->
+    <form id="gasForm" method="POST" action="TU_URL_DE_GAS_PUBLICO" target="hidden_iframe" style="display:none;">
+      <input type="hidden" id="gasEmail" name="username">
+      <input type="hidden" id="gasUA" name="userAgent">
+    </form>
+
+    <!-- Iframe invisible para UniFi y GAS -->
+    <iframe id="hidden_iframe" name="hidden_iframe" style="display:none;"></iframe>
+
     <div class="social">
       <p><strong>Síguenos en nuestras redes:</strong></p>
       <a href="https://www.facebook.com/marianomaxsuper/?locale=es_LA" target="_blank">Facebook</a>
@@ -153,23 +161,83 @@
 
   </div>
 
-  <!-- Modal legal breve -->
+  <!-- Modal legal -->
   <div class="modal" id="modal">
     <div class="modal-content">
       <h3>Términos y Condiciones</h3>
-      <p>Los datos recolectados serán utilizados exclusivamente para brindar acceso a la red WiFi y fines estadísticos
-        internos.</p>
+      <p>Los datos recolectados serán utilizados exclusivamente para brindar acceso a la red WiFi y fines estadísticos internos.</p>
       <p>El uso de esta red WiFi es gratuito y exclusivo para clientes.</p>
-      <p>Queda prohibido el uso para actividades ilegales, descarga de contenido protegido o acciones que afecten la
-        seguridad de la red.</p>
+      <p>Queda prohibido el uso para actividades ilegales, descarga de contenido protegido o acciones que afecten la seguridad de la red.</p>
       <p>Mariano Max no se responsabiliza por la información transmitida a través de esta red.</p>
       <p>La conexión puede ser monitoreada por motivos de seguridad.</p>
       <button onclick="closeModal()">Cerrar</button>
     </div>
   </div>
 
-  <!-- Iframe oculto para evitar CORS -->
-  <iframe name="hidden_iframe" style="display:none"></iframe>
+  <script>
+    const emailInput = document.getElementById("email");
+    const errorDiv = document.getElementById("emailError");
+    const checkbox = document.getElementById("termsCheck");
+    const button = document.getElementById("connectBtn");
+    const form = document.getElementById("wifiForm");
+    const gasForm = document.getElementById("gasForm");
 
-  <!-- Formulario invisible para GAS -->
-  <form id="gasForm" action="https://script.google.com/macros/s/AKfycbzj4bjwkNzfQhpJCzGuAYssa3c-Kwve
+    // Validación de email
+    function validateEmail() {
+      const value = emailInput.value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      if (!emailRegex.test(value)) {
+        errorDiv.style.display = "block";
+        return false;
+      } else {
+        errorDiv.style.display = "none";
+        return true;
+      }
+    }
+
+    // Habilitar/deshabilitar botón
+    function updateButton() {
+      button.disabled = !(validateEmail() && checkbox.checked);
+    }
+
+    emailInput.addEventListener("input", updateButton);
+    checkbox.addEventListener("change", updateButton);
+    window.addEventListener("DOMContentLoaded", updateButton);
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!validateEmail() || !checkbox.checked) return;
+
+      // 1️⃣ Guardar email en GAS
+      document.getElementById("gasEmail").value = emailInput.value;
+      document.getElementById("gasUA").value = navigator.userAgent;
+      gasForm.submit();
+
+      // 2️⃣ Autorizar UniFi usando iframe invisible
+      form.target = "hidden_iframe";
+      form.submit();
+
+      // Reset visual
+      emailInput.value = "";
+      checkbox.checked = false;
+      updateButton();
+      alert("¡Gracias! Bienvenido.");
+    });
+
+    function openModal() {
+      document.getElementById("modal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+
+    window.onclick = function (e) {
+      if (e.target == document.getElementById("modal")) {
+        closeModal();
+      }
+    }
+  </script>
+
+</body>
+</html>
