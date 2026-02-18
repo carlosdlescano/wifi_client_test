@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bienvenido a Mariano Max</title>
-
   <style>
     body {
       background: linear-gradient(135deg, #0d47a1, #1976d2);
@@ -15,7 +13,6 @@
       min-height: 100vh;
       font-family: Arial, sans-serif;
     }
-
     .container {
       background: #fff;
       width: 95%;
@@ -25,229 +22,123 @@
       box-shadow: 0 15px 40px rgba(0, 0, 0, .25);
       text-align: center;
     }
-
-    h2 {
-      color: #1976d2;
-      margin-bottom: 15px;
-    }
-
-    .label {
-      text-align: left;
-      font-size: 14px;
-      margin-bottom: 5px;
-      color: #333;
-    }
-
-    .input-group {
-      margin-bottom: 20px;
-      text-align: left;
-    }
-
-    .input-group input {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-bottom: 2px solid #ccc;
-      font-size: 14px;
-    }
-
-    .input-group input:focus {
-      outline: none;
-      border-bottom: 2px solid #1976d2;
-    }
-
-    .error {
-      color: red;
-      font-size: 12px;
-      display: none;
-      margin-top: 5px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #1976d2;
-      border: none;
-      border-radius: 8px;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      background: #90caf9;
-      cursor: not-allowed;
-    }
-
-    .social {
-      margin-top: 25px;
-    }
-
-    .social a {
-      margin: 0 10px;
-      color: #1976d2;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    .social a:hover {
-      text-decoration: underline;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, .6);
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-content {
-      background: white;
-      padding: 25px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 400px;
-      font-size: 13px;
-      text-align: left;
-    }
+    h2 { color: #1976d2; margin-bottom: 15px; }
+    .label { text-align: left; font-size: 14px; margin-bottom: 5px; color: #333; }
+    .input-group { margin-bottom: 20px; text-align: left; }
+    .input-group input { width: 100%; padding: 12px; border: none; border-bottom: 2px solid #ccc; font-size: 14px; }
+    .input-group input:focus { outline: none; border-bottom: 2px solid #1976d2; }
+    .error { color: red; font-size: 12px; display: none; margin-top: 5px; }
+    button { width: 100%; padding: 12px; background: #1976d2; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; }
+    button:disabled { background: #90caf9; cursor: not-allowed; }
+    .social { margin-top: 25px; }
+    .social a { margin: 0 10px; color: #1976d2; font-weight: bold; text-decoration: none; }
+    .social a:hover { text-decoration: underline; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, .6); justify-content: center; align-items: center; }
+    .modal-content { background: white; padding: 25px; border-radius: 10px; width: 90%; max-width: 400px; font-size: 13px; text-align: left; }
   </style>
 </head>
-
 <body>
 
-  <div class="container">
+<div class="container">
+  <h2>Bienvenido a Mariano Max</h2>
 
-    <h2>Bienvenido a Mariano Max</h2>
-
-    <!-- Formulario para portal cautivo UniFi -->
-    <form id="wifiForm" method="post" action="$AUTH_ACTION">
-      <div class="label">Correo electrónico</div>
-
-      <div class="input-group">
-        <input type="email" id="email" name="username" required placeholder="tu@email.com">
-        <div class="error" id="emailError">Debe ingresar un correo electrónico válido.</div>
-      </div>
-
-      <input type="hidden" name="password" value="wifi">
-
-      <div style="text-align:left; font-size:13px;">
-        <input type="checkbox" id="termsCheck">
-        Acepto los <a href="#" onclick="openModal();return false;">términos y condiciones</a>
-      </div>
-
-      <br>
-
-      <button type="submit" id="connectBtn" disabled>Conectarse</button>
-    </form>
-
-    <div class="social">
-      <p><strong>Síguenos en nuestras redes:</strong></p>
-      <a href="https://www.facebook.com/marianomaxsuper/?locale=es_LA" target="_blank">Facebook</a>
-      <a href="https://www.instagram.com/marianomaxsuper/" target="_blank">Instagram</a>
+  <!-- Portal UniFi -->
+  <form id="wifiForm" method="post" action="$AUTH_ACTION">
+    <div class="label">Correo electrónico</div>
+    <div class="input-group">
+      <input type="email" id="email" name="username" required placeholder="tu@email.com">
+      <div class="error" id="emailError">Debe ingresar un correo electrónico válido.</div>
     </div>
 
-  </div>
+    <input type="hidden" name="password" value="wifi">
 
-  <!-- Modal legal breve -->
-  <div class="modal" id="modal">
-    <div class="modal-content">
-      <h3>Términos y Condiciones</h3>
-      <p>Los datos recolectados serán utilizados exclusivamente para brindar acceso a la red WiFi y fines estadísticos
-        internos.</p>
-      <p>El uso de esta red WiFi es gratuito y exclusivo para clientes.</p>
-      <p>Queda prohibido el uso para actividades ilegales, descarga de contenido protegido o acciones que afecten la
-        seguridad de la red.</p>
-      <p>Mariano Max no se responsabiliza por la información transmitida a través de esta red.</p>
-      <p>La conexión puede ser monitoreada por motivos de seguridad.</p>
-      <button onclick="closeModal()">Cerrar</button>
+    <div style="text-align:left; font-size:13px;">
+      <input type="checkbox" id="termsCheck">
+      Acepto los <a href="#" onclick="openModal();return false;">términos y condiciones</a>
     </div>
+    <br>
+    <button type="submit" id="connectBtn" disabled>Conectarse</button>
+  </form>
+
+  <div class="social">
+    <p><strong>Síguenos en nuestras redes:</strong></p>
+    <a href="https://www.facebook.com/marianomaxsuper/?locale=es_LA" target="_blank">Facebook</a>
+    <a href="https://www.instagram.com/marianomaxsuper/" target="_blank">Instagram</a>
   </div>
+</div>
 
-  <script>
-    const emailInput = document.getElementById("email");
-    const errorDiv = document.getElementById("emailError");
-    const checkbox = document.getElementById("termsCheck");
-    const button = document.getElementById("connectBtn");
-    const modal = document.getElementById("modal");
-    const form = document.getElementById("wifiForm");
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3>Términos y Condiciones</h3>
+    <p>Los datos recolectados serán utilizados exclusivamente para brindar acceso a la red WiFi y fines estadísticos internos.</p>
+    <p>El uso de esta red WiFi es gratuito y exclusivo para clientes.</p>
+    <p>Queda prohibido el uso para actividades ilegales, descarga de contenido protegido o acciones que afecten la seguridad de la red.</p>
+    <p>Mariano Max no se responsabiliza por la información transmitida a través de esta red.</p>
+    <p>La conexión puede ser monitoreada por motivos de seguridad.</p>
+    <button onclick="closeModal()">Cerrar</button>
+  </div>
+</div>
 
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbzj4bjwkNzfQhpJCzGuAYssa3c-KwveK6PRQqigSoMqd30ka4fPRwS9Amnx3HoJfxbyrg/exec"; 
+<script>
+const emailInput = document.getElementById("email");
+const errorDiv = document.getElementById("emailError");
+const checkbox = document.getElementById("termsCheck");
+const button = document.getElementById("connectBtn");
+const form = document.getElementById("wifiForm");
+const GAS_URL = "https://script.google.com/macros/s/AKfycbzj4bjwkNzfQhpJCzGuAYssa3c-KwveK6PRQqigSoMqd30ka4fPRwS9Amnx3HoJfxbyrg/exec";
 
-    function validateEmail() {
-      const value = emailInput.value.trim();
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-      if (!emailRegex.test(value)) {
-        errorDiv.style.display = "block";
-        return false;
-      } else {
-        errorDiv.style.display = "none";
-        return true;
-      }
-    }
+// Validación email
+function validateEmail() {
+  const value = emailInput.value.trim();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if(!emailRegex.test(value)) { errorDiv.style.display="block"; return false; }
+  errorDiv.style.display="none";
+  return true;
+}
+function updateButton(){ button.disabled = !(validateEmail() && checkbox.checked); }
+emailInput.addEventListener("input", updateButton);
+checkbox.addEventListener("change", updateButton);
 
-    function updateButton() {
-      button.disabled = !(validateEmail() && checkbox.checked);
-    }
+// Envío
+form.addEventListener("submit", function(e){
+  e.preventDefault();
+  if(!validateEmail()) return;
 
-    emailInput.addEventListener("input", updateButton);
-    checkbox.addEventListener("change", updateButton);
+  // 1️⃣ Guardar email en Google Sheets
+  const data = new URLSearchParams();
+  data.append("username", emailInput.value);
+  data.append("userAgent", navigator.userAgent);
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      if (!validateEmail()) return;
-
-      // 1️⃣ Guardar email en Google Sheets vía GAS
-      const data = new URLSearchParams();
-      data.append("username", emailInput.value);
-      data.append("userAgent", navigator.userAgent);
-
-      fetch(GAS_URL, {
-        method: "POST",
-        body: data
-      })
-      .then(resp => resp.json())
-      .then(json => {
-        if(json.status === "ok") {
-          // 2️⃣ Autorizar WiFi UniFi usando iframe invisible
-          let iframe = document.getElementById("hidden_iframe");
-          if(!iframe){
-            iframe = document.createElement("iframe");
-            iframe.style.display = "none";
-            iframe.name = "hidden_iframe";
-            iframe.id = "hidden_iframe";
-            document.body.appendChild(iframe);
-          }
-          form.target = "hidden_iframe";
-          form.submit(); // enviamos el form real al portal UniFi
-        } else {
-          alert("Error guardando los datos.");
+  fetch(GAS_URL, { method:"POST", body:data })
+    .then(resp=>resp.json())
+    .then(json=>{
+      if(json.status==="ok"){
+        // 2️⃣ Enviar al portal UniFi usando iframe invisible
+        let iframe=document.getElementById("hidden_iframe");
+        if(!iframe){
+          iframe=document.createElement("iframe");
+          iframe.style.display="none";
+          iframe.name="hidden_iframe";
+          iframe.id="hidden_iframe";
+          document.body.appendChild(iframe);
         }
-      })
-      .catch(err => {
-        console.error(err);
-        alert("Error enviando los datos a Google Sheets.");
-      });
-    });
-
-    function openModal() {
-      modal.style.display = "flex";
-    }
-
-    function closeModal() {
-      modal.style.display = "none";
-    }
-
-    window.onclick = function (e) {
-      if (e.target == modal) {
-        modal.style.display = "none";
+        form.target="hidden_iframe"; // importante para que la página no se recargue
+        form.submit();
+      } else {
+        alert("Error guardando los datos en Sheets");
       }
-    }
-  </script>
+    })
+    .catch(err=>{
+      console.error(err);
+      alert("Error enviando los datos a Google Sheets");
+    });
+});
+
+// Modal
+function openModal(){ modal.style.display="flex"; }
+function closeModal(){ modal.style.display="none"; }
+window.onclick=function(e){ if(e.target==modal){ modal.style.display="none"; } }
+</script>
 
 </body>
 </html>
