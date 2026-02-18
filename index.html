@@ -124,12 +124,8 @@
 
     <h2>Bienvenido a Mariano Max</h2>
 
-    <!--<form id="wifiForm" method="post" action="$AUTH_ACTION"> comentado para prueba local-->
-    <form id="wifiForm" method="post" action="#">
-      <!--<form id="wifiForm" method="POST"
-      action="https://script.google.com/macros/s/AKfycbzj4bjwkNzfQhpJCzGuAYssa3c-KwveK6PRQqigSoMqd30ka4fPRwS9Amnx3HoJfxbyrg/exec">-->
-
-
+    <!-- Formulario para portal cautivo UniFi -->
+    <form id="wifiForm" method="post" action="$AUTH_ACTION">
       <div class="label">Correo electrónico</div>
 
       <div class="input-group">
@@ -147,7 +143,6 @@
       <br>
 
       <button type="submit" id="connectBtn" disabled>Conectarse</button>
-
     </form>
 
     <div class="social">
@@ -165,12 +160,9 @@
       <p>Los datos recolectados serán utilizados exclusivamente para brindar acceso a la red WiFi y fines estadísticos
         internos.</p>
       <p>El uso de esta red WiFi es gratuito y exclusivo para clientes.</p>
-
       <p>Queda prohibido el uso para actividades ilegales, descarga de contenido protegido o acciones que afecten la
         seguridad de la red.</p>
-
       <p>Mariano Max no se responsabiliza por la información transmitida a través de esta red.</p>
-
       <p>La conexión puede ser monitoreada por motivos de seguridad.</p>
       <button onclick="closeModal()">Cerrar</button>
     </div>
@@ -184,10 +176,11 @@
     const modal = document.getElementById("modal");
     const form = document.getElementById("wifiForm");
 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzj4bjwkNzfQhpJCzGuAYssa3c-KwveK6PRQqigSoMqd30ka4fPRwS9Amnx3HoJfxbyrg/exec"; 
+
     function validateEmail() {
       const value = emailInput.value.trim();
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
       if (!emailRegex.test(value)) {
         errorDiv.style.display = "block";
         return false;
@@ -205,40 +198,40 @@
     checkbox.addEventListener("change", updateButton);
 
     form.addEventListener("submit", function (e) {
-      e.preventDefault(); // Evita la redirección
-
+      e.preventDefault();
       if (!validateEmail()) return;
 
-      // Mostramos mensaje
-      alert("¡Gracias! Bienvenido.");
+      // 1️⃣ Guardar email en Google Sheets vía GAS
+      const data = new URLSearchParams();
+      data.append("username", emailInput.value);
+      data.append("userAgent", navigator.userAgent);
 
-      // Creamos iframe invisible si no existe
-      let iframe = document.getElementById("hidden_iframe");
-      if (!iframe) {
-        iframe = document.createElement("iframe");
-        iframe.style.display = "none";
-        iframe.name = "hidden_iframe";
-        iframe.id = "hidden_iframe";
-        document.body.appendChild(iframe);
-      }
-
-      // Agregamos userAgent si no existe
-      let uaInput = document.getElementById("userAgentInput");
-      if (!uaInput) {
-        uaInput = document.createElement("input");
-        uaInput.type = "hidden";
-        uaInput.name = "userAgent";
-        uaInput.id = "userAgentInput";
-        form.appendChild(uaInput);
-      }
-      uaInput.value = navigator.userAgent;
-
-      // Asignamos target y action
-      form.target = "hidden_iframe";
-      form.action = "https://script.google.com/macros/s/AKfycbzj4bjwkNzfQhpJCzGuAYssa3c-KwveK6PRQqigSoMqd30ka4fPRwS9Amnx3HoJfxbyrg/exec";
-      form.method = "POST";
-
-      form.submit(); // Esto enviará el form sin cambiar la página visible
+      fetch(GAS_URL, {
+        method: "POST",
+        body: data
+      })
+      .then(resp => resp.json())
+      .then(json => {
+        if(json.status === "ok") {
+          // 2️⃣ Autorizar WiFi UniFi usando iframe invisible
+          let iframe = document.getElementById("hidden_iframe");
+          if(!iframe){
+            iframe = document.createElement("iframe");
+            iframe.style.display = "none";
+            iframe.name = "hidden_iframe";
+            iframe.id = "hidden_iframe";
+            document.body.appendChild(iframe);
+          }
+          form.target = "hidden_iframe";
+          form.submit(); // enviamos el form real al portal UniFi
+        } else {
+          alert("Error guardando los datos.");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Error enviando los datos a Google Sheets.");
+      });
     });
 
     function openModal() {
@@ -257,5 +250,4 @@
   </script>
 
 </body>
-
 </html>
