@@ -200,10 +200,14 @@
       button.disabled = !(validateEmail() && checkbox.checked);
     }
 
+    // Detecta cambios en input y checkbox
     emailInput.addEventListener("input", updateButton);
     checkbox.addEventListener("change", updateButton);
-    window.addEventListener("DOMContentLoaded", updateButton);
 
+    // Inicializar al cargar la página
+    window.addEventListener("load", updateButton);
+
+    // Manejo del submit
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (!validateEmail() || !checkbox.checked) return;
@@ -221,9 +225,18 @@
       emailInput.value = "";
       checkbox.checked = false;
       updateButton();
-      alert("¡Gracias! Bienvenido.");
+
+      // Mensaje temporal en lugar de alert
+      const msg = document.createElement("div");
+      msg.innerText = "¡Gracias! Bienvenido.";
+      msg.style.color = "#1976d2";
+      msg.style.fontWeight = "bold";
+      msg.style.marginTop = "10px";
+      form.appendChild(msg);
+      setTimeout(() => msg.remove(), 3000);
     });
 
+    // Modal
     function openModal() {
       document.getElementById("modal").style.display = "flex";
     }
